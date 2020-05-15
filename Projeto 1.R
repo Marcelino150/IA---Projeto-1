@@ -8,10 +8,11 @@ dfFunc <- function(){
               full.names = FALSE, recursive = FALSE,
               ignore.case = FALSE, include.dirs = FALSE, no.. = FALSE)
   
-  number <- vector(,2000)
+  nfiles <- length(file)
+  number <- vector(,nfiles)
   pixels <- matrix(nrow= 0, ncol=4096)
   
-  for (i in 1:2000) {
+  for (i in 1:nfiles) {
     number[i] <- substring(file[i], 1 , 1)
     
     n0 <- read.csv(file = paste("DigitosCompleto/",file[i], sep="") ,header=FALSE, sep=" ")
@@ -36,6 +37,7 @@ dfFunc <- function(){
 
 #KNN
 knnFunc <- function(dadosTreino, dadosTeste, k) {
+  library(class)
   
   tiposTreino<-dadosTreino[,1]
   dadosTreino<-dadosTreino[,-1]
