@@ -68,7 +68,7 @@ rpartFunc <- function(dadosTreino,dadosTeste){
 }
 
 #SVM
-svmFunc <- function(dadosTreino, dadosTeste){
+svmFunc <- function(dadosTreino, dadosTeste, type, kernel){
   library(e1071)
   
   tiposTeste <- dadosTeste[,1]
@@ -76,8 +76,8 @@ svmFunc <- function(dadosTreino, dadosTeste){
   
   classifier <- svm( formula = number ~ .,
                      data= dadosTreino,
-                     type='C-classification',
-                     kernel='linear')
+                     type=type,
+                     kernel=kernel)
   
   pred = predict(classifier, newdata = dadosTeste)
   
@@ -102,4 +102,29 @@ knnFunc(dadosTreino, dadosTeste, 7)
 knnFunc(dadosTreino, dadosTeste, 9)
 
 rpartFunc(dadosTreino, dadosTeste)
-svmFunc(dadosTreino, dadosTeste)
+
+svmFunc(dadosTreino, dadosTeste, 'C-classification', 'linear')
+svmFunc(dadosTreino, dadosTeste, 'one-classification', 'linear')
+svmFunc(dadosTreino, dadosTeste, 'nu-classification', 'linear')
+svmFunc(dadosTreino, dadosTeste, 'C-classification', 'polynomial')
+svmFunc(dadosTreino, dadosTeste, 'C-classification', 'radial')
+svmFunc(dadosTreino, dadosTeste, 'C-classification', 'sigmoid')
+
+##### Para plotar a árvore de decisão
+dadosTreino<-df[indiceTreino,]
+dadosTeste<-df[-indiceTreino,]
+
+
+modelo<-rpart(number~., dadosTreino, method="class")
+
+
+plot(modelo)
+text(fit, use.n=TRUE, all=TRUE, cex=.8)
+tiposTeste<-dadosTeste$number
+dadosTeste<-dadosTeste[,-1]
+pred<-predict(modelo, dadosTeste, type="class")
+
+matrizConf<-table(tiposTeste,pred)
+matrizConf
+sum(diag(matrizConf))/sum(matrizConf)
+
